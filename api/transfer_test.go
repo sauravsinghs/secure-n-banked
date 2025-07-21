@@ -10,12 +10,12 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/golang/mock/gomock"
 	mockdb "github.com/sauravsinghs/simplebank/db/mock"
 	db "github.com/sauravsinghs/simplebank/db/sqlc"
 	"github.com/sauravsinghs/simplebank/token"
 	"github.com/sauravsinghs/simplebank/util"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 func TestTransferAPI(t *testing.T) {

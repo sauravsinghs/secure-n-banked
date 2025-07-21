@@ -15,12 +15,12 @@ var testDB *sql.DB
 
 func TestMain(m *testing.M) {
 	config, err := util.LoadConfig("../..")
-	if err!=nil {
+	if err != nil {
 		log.Fatal("cannot load config", err)
 	}
 
-	testDB, err = sql.Open(config.DBSource, config.DBSource)
-	if err !=nil {
+	testDB, err = sql.Open("postgres", config.DBSource)
+	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
 

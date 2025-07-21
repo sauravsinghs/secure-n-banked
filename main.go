@@ -27,7 +27,12 @@ func main() {
 		log.Fatal("cannot create server:", err)
 	}
 
-	err = server.Start(config.HTTPServerAddress)
+	address := config.HTTPServerAddress
+	if len(address) == 0 {
+		address = "0.0.0.0:8080"
+	}
+
+	err = server.Start(address)
 	if err != nil {
 		log.Fatal("cannot start server:", err)
 	}

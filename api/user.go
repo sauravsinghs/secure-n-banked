@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/lib/pq"
 	db "github.com/sauravsinghs/simplebank/db/sqlc"
 	"github.com/sauravsinghs/simplebank/token"
@@ -25,15 +26,19 @@ type userResponse struct {
 	Email             string    `json:"email"`
 	PasswordChangedAt time.Time `json:"password_changed_at"`
 	CreatedAt         time.Time `json:"created_at"`
+	IsEmailVerified   bool      `json:"is_email_verified"`
+	Role              string    `json:"role"`
 }
 
 func newUserResponse(user db.User) userResponse {
-	return userResponse {
-		Username: user.Username,
-		FullName: user.FullName,
-		Email: user.Email,
+	return userResponse{
+		Username:          user.Username,
+		FullName:          user.FullName,
+		Email:             user.Email,
 		PasswordChangedAt: user.PasswordChangedAt,
-		CreatedAt: user.CreatedAt,
+		CreatedAt:         user.CreatedAt,
+		IsEmailVerified:   user.IsEmailVerified,
+		Role:              user.Role,
 	}
 }
 
@@ -45,23 +50,24 @@ func (server *Server) createUser(ctx *gin.Context) {
 	}
 
 	hashedPassword, err := util.HashPassword(req.Password)
-	if err := ctx.ShouldBindJSON(&req); err != nil {
+	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
 
 	arg := db.CreateUserParams{
-		Username:    req.Username,
+		Username:       req.Username,
 		HashedPassword: hashedPassword,
-		FullName:  req.FullName,
-		Email:  req.Email,
+		FullName:       req.FullName,
+		Email:         req.Email,
+		Role:          util.DepositorRole,
 	}
 
 	user, err := server.store.CreateUser(ctx, arg)
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok {
 			switch pqErr.Code.Name() {
-			case "unique-violation":
+			case "unique_violation":
 				ctx.JSON(http.StatusForbidden, errorResponse(err))
 				return
 			}
@@ -71,7 +77,6 @@ func (server *Server) createUser(ctx *gin.Context) {
 	}
 
 	rsp := newUserResponse(user)
-
 	ctx.JSON(http.StatusOK, rsp)
 }
 
@@ -81,8 +86,12 @@ type loginUserRequest struct {
 }
 
 type loginUserResponse struct {
-	AccessToken string `json:"access_token"`
-	User userResponse `json:"user"`
+	SessionID             uuid.UUID    `json:"session_id"`
+	AccessToken          string       `json:"access_token"`
+	AccessTokenExpiresAt time.Time    `json:"access_token_expires_at"`
+	RefreshToken         string       `json:"refresh_token"`
+	RefreshTokenExpiresAt time.Time   `json:"refresh_token_expires_at"`
+	User                 userResponse `json:"user"`
 }
 
 func (server *Server) loginUser(ctx *gin.Context) {
@@ -119,9 +128,38 @@ func (server *Server) loginUser(ctx *gin.Context) {
 		return
 	}
 
-	rsp := loginUserResponse {
-		AccessToken: accessToken,
-		User: newUserResponse(user),
+	refreshToken, refreshPayload, err := server.tokenMaker.CreateToken(
+		user.Username,
+		user.Role,
+		server.config.RefreshTokenDuration,
+		token.TokenTypeRefreshToken,
+	)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	session, err := server.store.CreateSession(ctx, db.CreateSessionParams{
+		ID:           refreshPayload.ID,
+		Username:     user.Username,
+		RefreshToken: refreshToken,
+		UserAgent:    ctx.Request.UserAgent(),
+		ClientIp:     ctx.ClientIP(),
+		IsBlocked:    false,
+		ExpiresAt:    refreshPayload.ExpiredAt,
+	})
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	rsp := loginUserResponse{
+		SessionID:             session.ID,
+		AccessToken:           accessToken,
+		AccessTokenExpiresAt:  accessPayload.ExpiredAt,
+		RefreshToken:          refreshToken,
+		RefreshTokenExpiresAt: refreshPayload.ExpiredAt,
+		User:                  newUserResponse(user),
 	}
 	ctx.JSON(http.StatusOK, rsp)
 }
