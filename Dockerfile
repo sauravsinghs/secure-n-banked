@@ -3,8 +3,8 @@ WORKDIR /app
 COPY . .
 RUN go build -o main main.go
 RUN apk add curl 
-RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.3/migrate.linux-amd64.tar.gz -o migrate.tar.gz
-          tar xvf migrate.tar.gz
+RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.3/migrate.linux-amd64.tar.gz -o migrate.tar.gz && \
+    tar xvf migrate.tar.gz
 
 FROM alpine:3.22
 WORKDIR /app
@@ -16,4 +16,5 @@ COPY wait-for.sh .
 COPY db/migration ./migration
 
 EXPOSE 8080
-CMD ["/app/main"]ENTRYPOINT [ "/app/start.sh" ]
+CMD ["/app/main"]
+ENTRYPOINT [ "/app/start.sh" ]
