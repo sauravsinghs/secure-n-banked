@@ -15,7 +15,7 @@ data:
       groups:
         - system:masters
   mapUsers: |
-    - userarn: arn:aws:iam::172149903700:user/github-ci
+    - userarn: AIDASQFHPCFKAEW3BMCHX
       username: github-ci
       groups:
         - system:masters
