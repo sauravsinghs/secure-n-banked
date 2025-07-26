@@ -77,7 +77,6 @@ jobs:
 
       - name: Deploy manifests to EKS
         run: |
-          kubectl apply -f eks/aws-auth.yaml --validate=false
           kubectl apply -f eks/deployment.yaml
           kubectl apply -f eks/service.yaml
           kubectl apply -f eks/issuer.yaml
