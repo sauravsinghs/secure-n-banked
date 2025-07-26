@@ -89,7 +89,7 @@ jobs:
           echo "Waiting for auth config to propagate..."
           sleep 30
 
-      - name: Deploy image to Amazon EKS
+      - name: Update EKS auth config
         run: |
           kubectl apply -f eks/deployment.yaml
           kubectl apply -f eks/service.yaml
