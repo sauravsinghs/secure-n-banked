@@ -50,7 +50,7 @@ jobs:
 
       - name: Debug AWS identity
         run: aws sts get-caller-identity
-
+        
       - name: Update EKS auth config
         run: |
           kubectl apply -f eks/aws-auth.yaml --validate=false
