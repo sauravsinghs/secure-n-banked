@@ -74,7 +74,7 @@ jobs:
 
           echo "=== Test basic kubectl ==="
           kubectl version --client
-          kubectl version --short || echo "Server version failed"
+          kubectl version --output=yaml | head -n 20 || echo "Server version failed"
 
           echo "=== Test cluster connectivity ==="
           kubectl cluster-info || echo "Cluster info failed"
