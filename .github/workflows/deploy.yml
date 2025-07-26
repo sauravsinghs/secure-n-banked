@@ -2,7 +2,11 @@ name: Deploy to production
 
 on:
   push:
-    branches: [release]
+    branches: [release, master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+    inputs: {}
 
 jobs:
   deploy:
@@ -43,7 +47,7 @@ jobs:
           docker push -a $REGISTRY/$REPOSITORY
 
       - name: Update kube config
-        run: aws eks update-kubeconfig --name simple-bank-eks --region ap-south-1
+        run: aws eks update-kubeconfig --name simple-bank --region ap-south-1
 
       - name: Deploy image to Amazon EKS
         run: |
