@@ -85,12 +85,7 @@ jobs:
 
       - name: Update EKS auth config
         run: |
-          kubectl apply -f eks/aws-auth.yaml --validate=false
-          echo "Waiting for auth config to propagate..."
-          sleep 30
-
-      - name: Update EKS auth config
-        run: |
+          sed -i "s|simplebank:latest|simplebank:${{ github.sha }}|" eks/deployment.yaml
           kubectl apply -f eks/deployment.yaml
           kubectl apply -f eks/service.yaml
           kubectl apply -f eks/issuer.yaml
