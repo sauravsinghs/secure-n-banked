@@ -45,12 +45,24 @@ jobs:
       - name: Update kubeconfig for EKS cluster
         run: aws eks update-kubeconfig --name simple-bank --region ap-south-1
 
+      - name: Debug AWS and EKS connectivity
+        run: |
+          echo "=== AWS Identity ==="
+          aws sts get-caller-identity
+          echo "=== EKS Cluster Status ==="
+          aws eks describe-cluster --name simple-bank --region ap-south-1 --query 'cluster.status'
+          echo "=== Kubeconfig Context ==="
+          kubectl config current-context
+          echo "=== Test kubectl connectivity ==="
+          kubectl version --client
+          kubectl cluster-info || echo "Cluster info failed"
+          echo "=== Test EKS token generation ==="
+          aws eks get-token --cluster-name simple-bank --region ap-south-1 || echo "Token generation failed"
+
       - name: Deploy manifests to EKS
         run: |
           kubectl apply -f eks/aws-auth.yaml --validate=false
           kubectl apply -f eks/deployment.yaml
           kubectl apply -f eks/service.yaml
           kubectl apply -f eks/issuer.yaml
-          kubectl apply -f eks/ingress-nginx.yaml
-          kubectl apply -f eks/ingress-http.yaml
-          kubectl apply -f eks/ingress-grpc.yaml
+          kubectl apply -f eks/ingress.yaml
