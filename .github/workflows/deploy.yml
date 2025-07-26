@@ -51,9 +51,14 @@ jobs:
       - name: Debug AWS identity
         run: aws sts get-caller-identity
 
-      - name: Deploy image to Amazon EKS
+      - name: Update EKS auth config
         run: |
           kubectl apply -f eks/aws-auth.yaml --validate=false
+          echo "Waiting for auth config to propagate..."
+          sleep 30
+
+      - name: Deploy image to Amazon EKS
+        run: |
           kubectl apply -f eks/deployment.yaml
           kubectl apply -f eks/service.yaml
           kubectl apply -f eks/issuer.yaml
