@@ -6,6 +6,10 @@ name: Deploy to prodution
 on:
   push:
     branches: ["master"]
+  pull_request:
+    branches: ["master"]
+  workflow_dispatch:
+    inputs: {}
   permissions:
     id-token: write
     contents: read
