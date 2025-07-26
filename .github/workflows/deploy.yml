@@ -50,7 +50,39 @@ jobs:
 
       - name: Debug AWS identity
         run: aws sts get-caller-identity
-        
+
+      - name: Extensive Debug EKS Connectivity
+        run: |
+          echo "=== AWS Identity ==="
+          aws sts get-caller-identity
+
+          echo "=== EKS Cluster Info ==="
+          aws eks describe-cluster --name simple-bank --region ap-south-1 --query 'cluster.{status:status,endpoint:endpoint,version:version}' || echo "Failed to describe cluster"
+
+          echo "=== Before kubeconfig update ==="
+          kubectl config get-contexts || echo "No contexts before update"
+
+          echo "=== Updating kubeconfig ==="
+          aws eks update-kubeconfig --name simple-bank --region ap-south-1 --verbose
+
+          echo "=== After kubeconfig update ==="
+          kubectl config get-contexts
+          kubectl config current-context
+
+          echo "=== Kubeconfig content ==="
+          cat ~/.kube/config
+
+          echo "=== Test basic kubectl ==="
+          kubectl version --client
+          kubectl version --short || echo "Server version failed"
+
+          echo "=== Test cluster connectivity ==="
+          kubectl cluster-info || echo "Cluster info failed"
+          kubectl auth can-i get pods || echo "Auth check failed"
+
+          echo "=== Test EKS token generation ==="
+          aws eks get-token --cluster-name simple-bank --region ap-south-1 || echo "Token generation failed"
+
       - name: Update EKS auth config
         run: |
           kubectl apply -f eks/aws-auth.yaml --validate=false
