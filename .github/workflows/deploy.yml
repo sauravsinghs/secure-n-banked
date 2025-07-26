@@ -51,17 +51,6 @@ jobs:
       - name: Debug AWS identity
         run: aws sts get-caller-identity
 
-      - name: Debug kubeconfig
-        run: |
-          echo "=== Kubeconfig contexts ==="
-          kubectl config get-contexts
-          echo "=== Current context ==="
-          kubectl config current-context
-          echo "=== Test basic connectivity ==="
-          kubectl version --short || echo "kubectl version failed"
-          echo "=== Test cluster access ==="
-          kubectl auth can-i get nodes || echo "Cannot access nodes"
-
       - name: Update EKS auth config
         run: |
           kubectl apply -f eks/aws-auth.yaml --validate=false
