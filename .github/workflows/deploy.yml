@@ -2,14 +2,11 @@ name: Deploy to production
 
 on:
   push:
-    branches: [release, master]
+    branches: [master, release]
   pull_request:
     branches: [master]
   workflow_dispatch:
     inputs: {}
-  permissions:
-    id-token: write
-    contents: read
 
 jobs:
   deploy:
