@@ -2,7 +2,7 @@ name: Deploy to production
 
 on:
   push:
-    branches: [release, master]
+    branches: [master, release]
   pull_request:
     branches: [master]
   workflow_dispatch:
@@ -12,7 +12,9 @@ jobs:
   deploy:
     name: Deploy to EKS
     runs-on: ubuntu-latest
-
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -42,11 +44,23 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
       - name: Update kubeconfig for EKS cluster
-        run: aws eks update-kubeconfig --name simple-bank --region ap-south-1 \
-          --role-arn arn:aws:iam::172149903700:role/github-ci-deploy
+        run: aws eks update-kubeconfig --name simple-bank --region ap-south-1 --role-arn arn:aws:iam::172149903700:role/github-ci-deploy
 
-      - name: Verify AWS identity
-        run: aws sts get-caller-identity
+      - name: Debug AWS and EKS connectivity
+        run: |
+          echo "=== AWS Identity ==="
+          aws sts get-caller-identity
+          echo "=== EKS Cluster Status ==="
+          aws eks describe-cluster --name simple-bank --region ap-south-1 --query 'cluster.status'
+          echo "=== Kubeconfig Context ==="
+          kubectl config current-context
+          echo "=== Kubeconfig Content ==="
+          cat ~/.kube/config
+          echo "=== Test kubectl connectivity ==="
+          kubectl version --client
+          kubectl cluster-info || echo "Cluster info failed"
+          echo "=== Test EKS token generation ==="
+          aws eks get-token --cluster-name simple-bank --region ap-south-1 || echo "Token generation failed"
 
       - name: Deploy manifests to EKS
         run: |
