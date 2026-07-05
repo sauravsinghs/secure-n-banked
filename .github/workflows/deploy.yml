@@ -44,7 +44,7 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
       - name: Update kubeconfig for EKS cluster
-        run: aws eks update-kubeconfig --name simple-bank-eks --region ap-south-1 --role-arn arn:aws:iam::172149903700:role/github-ci-deploy
+        run: aws eks update-kubeconfig --name simple-bank --region ap-south-1 --role-arn arn:aws:iam::172149903700:role/github-ci-deploy
 
       - name: Debug AWS and EKS connectivity
         run: |
