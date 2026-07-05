@@ -4,16 +4,17 @@
     {
       "Effect": "Allow",
       "Principal": {
-        "Service": "eks.amazonaws.com"
+        "Federated": "arn:aws:iam::172149903700:oidc-provider/token.actions.githubusercontent.com"
       },
-      "Action": "sts:AssumeRole"
-    },
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "arn:aws:iam::390402550905:role/EKSNetworkingChainRole"
-      },
-      "Action": "sts:AssumeRole"
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
+        },
+        "StringLike": {
+          "token.actions.githubusercontent.com:sub": "repo:sauravsinghs/simplebank:*"
+        }
+      }
     }
   ]
 }
