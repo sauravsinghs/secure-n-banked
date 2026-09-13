@@ -72,6 +72,11 @@ func main() {
 	runTaskProcessor(ctx, waitGroup, config, redisOpt, store)
 	runGatewayServer(ctx, waitGroup, config, store, taskDistributor)
 	runGrpcServer(ctx, waitGroup, config, store, taskDistributor)
+
+	err = waitGroup.Wait()
+	if err != nil {
+		log.Fatal().Err(err).Msg("service stopped with error")
+	}
 }
 
 func runDBMigration(migrationURL string, dbSource string) {
