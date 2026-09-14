@@ -92,7 +92,7 @@ func runDBMigration(migrationURL string, dbSource string) {
 	log.Info().Msg("db migrated successfully")
 }
 
-func runTaskProcessor(ctx context.Context, waitGroup *errgroup.Group, config util.Config,redisOpt asynq.RedisClientOpt, store db.Store) {
+func runTaskProcessor(ctx context.Context, waitGroup *errgroup.Group, config util.Config, redisOpt asynq.RedisClientOpt, store db.Store) {
 	mailer := mail.NewGmailSender(config.EmailSenderName, config.EmailSenderAddress, config.EmailSenderPassword)
 	taskProcessor := worker.NewRedisTaskProcessor(redisOpt, store, mailer)
 	log.Info().Msg("start task processor")
@@ -168,13 +168,13 @@ func runGatewayServer(ctx context.Context, waitGroup *errgroup.Group, config uti
 			DiscardUnknown: true,
 		},
 	})
-	
+
 	grpcMux := runtime.NewServeMux(jsonOption)
 
 	err = pb.RegisterSimpleBankHandlerServer(ctx, grpcMux, server)
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot register handler server:")
-	} 
+	}
 
 	mux := http.NewServeMux()
 	mux.Handle("/", grpcMux)
@@ -186,7 +186,7 @@ func runGatewayServer(ctx context.Context, waitGroup *errgroup.Group, config uti
 
 	swaggerHandler := http.StripPrefix("/swagger/", http.FileServer(statikFS))
 	mux.Handle("/swagger/", swaggerHandler)
-	
+
 	c := cors.New(cors.Options{
 		AllowedOrigins: config.AllowedOrigins,
 		AllowedMethods: []string{
