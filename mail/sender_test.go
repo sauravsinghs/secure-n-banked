@@ -1,9 +1,10 @@
 package mail
 
 import (
+	"strings"
 	"testing"
 
-	"github.com/sauravsinghs/simplebank/util"
+	"github.com/sauravsinghs/secure-n-banked/util"
 	"github.com/stretchr/testify/require"
 )
 
@@ -14,6 +15,10 @@ func TestSendEmailWithGmail(t *testing.T) {
 
 	config, err := util.LoadConfig("..")
 	require.NoError(t, err)
+	if strings.Contains(config.EmailSenderAddress, "your-email@gmail.com") ||
+		strings.Contains(config.EmailSenderPassword, "your-gmail-app-password") {
+		t.Skip("Gmail credentials are not configured")
+	}
 
 	sender := NewGmailSender(config.EmailSenderName, config.EmailSenderAddress, config.EmailSenderPassword)
 

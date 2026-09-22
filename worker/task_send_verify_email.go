@@ -7,8 +7,8 @@ import (
 
 	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog/log"
-	db "github.com/sauravsinghs/simplebank/db/sqlc"
-	"github.com/sauravsinghs/simplebank/util"
+	db "github.com/sauravsinghs/secure-n-banked/db/sqlc"
+	"github.com/sauravsinghs/secure-n-banked/util"
 )
 
 const TaskSendVerifyEmail = "task:send_verify_email"
@@ -61,7 +61,7 @@ func (processor *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Cont
 		return fmt.Errorf("failed to create verify email: %w", err)
 	}
 
-	subject := "Welcome to Simple Bank"
+	subject := "Welcome to Secure N Banked"
 	verifyUrl := fmt.Sprintf("http://localhost:8080/v1/verify_email?email_id=%d&secret_code=%s", verifyEmail.ID, verifyEmail.SecretCode)
 	content := fmt.Sprintf(`Hello %s,<br/>
 	Thank you for registering with us!<br/>

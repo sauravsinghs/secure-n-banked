@@ -1,7 +1,7 @@
 Project simple_bank {
   database_type: 'PostgreSQL'
   Note: '''
-    # Simple Bank Database
+    # Secure N Banked Database
   '''
 }
 

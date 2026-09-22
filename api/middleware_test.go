@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sauravsinghs/simplebank/token"
-	"github.com/sauravsinghs/simplebank/util"
+	"github.com/sauravsinghs/secure-n-banked/token"
+	"github.com/sauravsinghs/secure-n-banked/util"
 	"github.com/stretchr/testify/require"
 )
 

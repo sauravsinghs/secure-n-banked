@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package pb;
 
-option go_package = "github.com/sauravsinghs/simplebank/pb";
+option go_package = "github.com/sauravsinghs/secure-n-banked/pb";
 
 message VerifyEmailRequest {
     int64 email_id = 1;

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/sauravsinghs/simplebank/util"
+	"github.com/sauravsinghs/secure-n-banked/util"
 	"github.com/stretchr/testify/require"
 )
 

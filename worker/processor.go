@@ -5,8 +5,8 @@ import (
 
 	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog/log"
-	db "github.com/sauravsinghs/simplebank/db/sqlc"
-	"github.com/sauravsinghs/simplebank/mail"
+	db "github.com/sauravsinghs/secure-n-banked/db/sqlc"
+	"github.com/sauravsinghs/secure-n-banked/mail"
 )
 
 const (

@@ -12,9 +12,9 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	mockdb "github.com/sauravsinghs/simplebank/db/mock"
-	db "github.com/sauravsinghs/simplebank/db/sqlc"
-	"github.com/sauravsinghs/simplebank/util"
+	mockdb "github.com/sauravsinghs/secure-n-banked/db/mock"
+	db "github.com/sauravsinghs/secure-n-banked/db/sqlc"
+	"github.com/sauravsinghs/secure-n-banked/util"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )

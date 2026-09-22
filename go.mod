@@ -1,4 +1,4 @@
-module github.com/sauravsinghs/simplebank
+module github.com/sauravsinghs/secure-n-banked
 
 go 1.24.4
 

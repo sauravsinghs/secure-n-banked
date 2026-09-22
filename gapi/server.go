@@ -4,15 +4,15 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	db "github.com/sauravsinghs/simplebank/db/sqlc"
-	"github.com/sauravsinghs/simplebank/pb"
-	"github.com/sauravsinghs/simplebank/token"
-	"github.com/sauravsinghs/simplebank/util"
-	"github.com/sauravsinghs/simplebank/worker"
+	db "github.com/sauravsinghs/secure-n-banked/db/sqlc"
+	"github.com/sauravsinghs/secure-n-banked/pb"
+	"github.com/sauravsinghs/secure-n-banked/token"
+	"github.com/sauravsinghs/secure-n-banked/util"
+	"github.com/sauravsinghs/secure-n-banked/worker"
 )
 
 type Server struct {
-	pb.UnimplementedSimpleBankServer
+	pb.UnimplementedSecureNBankedServer
 	config     util.Config
 	store      db.Store
 	tokenMaker token.Maker

@@ -28,7 +28,7 @@ cat > trust-policy.json << EOF
                     "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
                 },
                 "StringLike": {
-                    "token.actions.githubusercontent.com:sub": "repo:sauravsinghs/simplebank:*"
+                    "token.actions.githubusercontent.com:sub": "repo:sauravsinghs/secure-n-banked:*"
                 }
             }
         }

@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Simple Bank API",
+    "title": "Secure N Banked API",
     "version": "1.2",
     "contact": {
       "name": "sauravsinghs",
@@ -11,7 +11,7 @@
   },
   "tags": [
     {
-      "name": "SimpleBank"
+      "name": "SecureNBanked"
     }
   ],
   "consumes": [
@@ -25,7 +25,7 @@
       "post": {
         "summary": "Create new user",
         "description": "Use this API to create a new user",
-        "operationId": "SimpleBank_CreateUser",
+        "operationId": "SecureNBanked_CreateUser",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -51,7 +51,7 @@
           }
         ],
         "tags": [
-          "SimpleBank"
+          "SecureNBanked"
         ]
       }
     },
@@ -59,7 +59,7 @@
       "post": {
         "summary": "Login user",
         "description": "Use this API to login user and get access token \u0026 refresh token",
-        "operationId": "SimpleBank_LoginUser",
+        "operationId": "SecureNBanked_LoginUser",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -85,7 +85,7 @@
           }
         ],
         "tags": [
-          "SimpleBank"
+          "SecureNBanked"
         ]
       }
     },
@@ -93,7 +93,7 @@
       "patch": {
         "summary": "Update user",
         "description": "Use this API to update user",
-        "operationId": "SimpleBank_UpdateUser",
+        "operationId": "SecureNBanked_UpdateUser",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -119,7 +119,7 @@
           }
         ],
         "tags": [
-          "SimpleBank"
+          "SecureNBanked"
         ]
       }
     },
@@ -127,7 +127,7 @@
       "get": {
         "summary": "verify email",
         "description": "Use this API to verify user's email address",
-        "operationId": "SimpleBank_VerifyEmail",
+        "operationId": "SecureNBanked_VerifyEmail",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -158,7 +158,7 @@
           }
         ],
         "tags": [
-          "SimpleBank"
+          "SecureNBanked"
         ]
       }
     }

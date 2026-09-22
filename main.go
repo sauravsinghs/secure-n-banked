@@ -19,14 +19,14 @@ import (
 	"github.com/rs/cors"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"github.com/sauravsinghs/simplebank/api"
-	db "github.com/sauravsinghs/simplebank/db/sqlc"
-	_ "github.com/sauravsinghs/simplebank/doc/statik"
-	"github.com/sauravsinghs/simplebank/gapi"
-	"github.com/sauravsinghs/simplebank/mail"
-	"github.com/sauravsinghs/simplebank/pb"
-	"github.com/sauravsinghs/simplebank/util"
-	"github.com/sauravsinghs/simplebank/worker"
+	"github.com/sauravsinghs/secure-n-banked/api"
+	db "github.com/sauravsinghs/secure-n-banked/db/sqlc"
+	_ "github.com/sauravsinghs/secure-n-banked/doc/statik"
+	"github.com/sauravsinghs/secure-n-banked/gapi"
+	"github.com/sauravsinghs/secure-n-banked/mail"
+	"github.com/sauravsinghs/secure-n-banked/pb"
+	"github.com/sauravsinghs/secure-n-banked/util"
+	"github.com/sauravsinghs/secure-n-banked/worker"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -72,6 +72,11 @@ func main() {
 	runTaskProcessor(ctx, waitGroup, config, redisOpt, store)
 	runGatewayServer(ctx, waitGroup, config, store, taskDistributor)
 	runGrpcServer(ctx, waitGroup, config, store, taskDistributor)
+
+	err = waitGroup.Wait()
+	if err != nil {
+		log.Fatal().Err(err).Msg("service stopped with error")
+	}
 }
 
 func runDBMigration(migrationURL string, dbSource string) {
@@ -115,7 +120,7 @@ func runGrpcServer(ctx context.Context, waitGroup *errgroup.Group, config util.C
 
 	grpcLogger := grpc.UnaryInterceptor(gapi.GrpcLogger)
 	grpcServer := grpc.NewServer(grpcLogger)
-	pb.RegisterSimpleBankServer(grpcServer, server)
+	pb.RegisterSecureNBankedServer(grpcServer, server)
 	reflection.Register(grpcServer)
 
 	listener, err := net.Listen("tcp", config.GRPCServerAddress)
@@ -166,7 +171,7 @@ func runGatewayServer(ctx context.Context, waitGroup *errgroup.Group, config uti
 	
 	grpcMux := runtime.NewServeMux(jsonOption)
 
-	err = pb.RegisterSimpleBankHandlerServer(ctx, grpcMux, server)
+	err = pb.RegisterSecureNBankedHandlerServer(ctx, grpcMux, server)
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot register handler server:")
 	} 
