@@ -31,10 +31,31 @@ func LoadConfig(path string) (config Config, err error) {
 	viper.SetConfigType("env")
 
 	viper.AutomaticEnv()
+	for _, key := range []string{
+		"ENVIRONMENT",
+		"ALLOWED_ORIGINS",
+		"DB_SOURCE",
+		"MIGRATION_URL",
+		"REDIS_ADDRESS",
+		"HTTP_SERVER_ADDRESS",
+		"GRPC_SERVER_ADDRESS",
+		"TOKEN_SYMMETRIC_KEY",
+		"ACCESS_TOKEN_DURATION",
+		"REFRESH_TOKEN_DURATION",
+		"EMAIL_SENDER_NAME",
+		"EMAIL_SENDER_ADDRESS",
+		"EMAIL_SENDER_PASSWORD",
+	} {
+		if err = viper.BindEnv(key); err != nil {
+			return
+		}
+	}
 
 	err = viper.ReadInConfig()
 	if err != nil {
-		return
+		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+			return
+		}
 	}
 
 	err = viper.Unmarshal(&config)

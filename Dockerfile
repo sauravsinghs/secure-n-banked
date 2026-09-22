@@ -11,6 +11,7 @@ COPY wait-for.sh .
 COPY db/migration ./db/migration
 
 # Make shell scripts executable
+RUN sed -i 's/\r$//' start.sh wait-for.sh
 RUN chmod +x start.sh wait-for.sh
 
 EXPOSE 8080 9090
