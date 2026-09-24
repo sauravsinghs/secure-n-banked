@@ -107,6 +107,7 @@ docker compose up --build
 ```
 
 The containerized API uses PostgreSQL at `postgres:5432` internally and is published on ports `8080` and `9090`.
+
 # Simple Bank
 
 Simple Bank is a backend service for a small banking system. It manages users, bank accounts, sessions, email verification, and money transfers with PostgreSQL-backed transactions.
